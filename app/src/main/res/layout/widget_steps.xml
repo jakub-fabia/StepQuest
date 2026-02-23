@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="12dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="14dp">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_title"
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/widget_step_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/widget_text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Today row -->
+    <TextView
+        android:id="@+id/widget_label_today"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_label_today"
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="11sp" />
+
+    <ProgressBar
+        android:id="@+id/widget_bar_today"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="4dp"
+        android:max="100"
+        android:progress="0" />
+
+    <!-- Last 7 days row -->
+    <TextView
+        android:id="@+id/widget_label_7days"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_label_7days"
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="11sp" />
+
+    <ProgressBar
+        android:id="@+id/widget_bar_7days"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="4dp"
+        android:max="100"
+        android:progress="0" />
+
+    <!-- Last 30 days row -->
+    <TextView
+        android:id="@+id/widget_label_30days"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_label_30days"
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="11sp" />
+
+    <ProgressBar
+        android:id="@+id/widget_bar_30days"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="2dp"
+        android:max="100"
+        android:progress="0" />
+
+</LinearLayout>
