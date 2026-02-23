@@ -34,6 +34,13 @@
     <string name="csv_export_error">Error exporting CSV file.</string>
     <string name="csv_export_no_data">No step data to export.</string>
 
+    <string name="label_yearly_pace">Yearly Pace</string>
+    <string name="pace_steps_ahead">steps ahead</string>
+    <string name="pace_steps_behind">steps behind</string>
+    <string name="pace_on_pace">on pace</string>
+    <string name="pace_label_behind">\u2212100k</string>
+    <string name="pace_label_ahead">+100k</string>
+
     <string name="widget_title">Step Tracker</string>
     <string name="widget_description">Shows today\'s step count with progress bars.</string>
     <string name="widget_label_today">Today</string>

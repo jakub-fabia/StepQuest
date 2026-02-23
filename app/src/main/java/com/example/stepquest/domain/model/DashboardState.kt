@@ -17,6 +17,7 @@ data class DashboardState(
     val month: DashboardRow = DashboardRow(0, 0, 0),
     val last30: DashboardRow = DashboardRow(0, 0, 0),
     val year: DashboardRow = DashboardRow(0, 0, 0),
+    val paceSteps: Long = 0,
     val isRefreshing: Boolean = false,
     val showGrantPermission: Boolean = false,
     val error: DashboardError? = null

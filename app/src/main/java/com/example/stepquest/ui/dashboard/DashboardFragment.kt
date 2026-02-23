@@ -31,6 +31,10 @@ import com.example.stepquest.domain.model.DashboardRow
 import com.example.stepquest.domain.model.DashboardState
 import com.example.stepquest.widget.StepsWidgetProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.graphics.drawable.GradientDrawable
+import androidx.core.graphics.ColorUtils
+import com.google.android.material.color.MaterialColors
+import kotlin.math.abs
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -92,6 +96,8 @@ class DashboardFragment : Fragment(), MenuProvider {
             findNavController().navigate(R.id.action_FirstFragment_to_MonthlySteps)
         }
 
+        setupPaceCard()
+
         viewModel.setupRecordingApi(
             hasActivityRecognitionPermission = ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.ACTIVITY_RECOGNITION
@@ -121,6 +127,8 @@ class DashboardFragment : Fragment(), MenuProvider {
     private fun renderState(state: DashboardState) {
         binding.swipeRefresh.isRefreshing = state.isRefreshing
 
+        renderPace(state.paceSteps)
+
         updateRow(binding.countDay, binding.barDay, state.today)
         updateRow(binding.countLast7, binding.barLast7, state.last7)
         updateRow(binding.countMonth, binding.barMonth, state.month)
@@ -144,6 +152,72 @@ class DashboardFragment : Fragment(), MenuProvider {
 
         if (!state.isRefreshing) {
             StepsWidgetProvider.requestUpdate(requireContext())
+        }
+    }
+
+    private fun setupPaceCard() {
+        val density = resources.displayMetrics.density
+        binding.paceTrack.background = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 2f * density
+            setColor(
+                MaterialColors.getColor(
+                    requireView(),
+                    com.google.android.material.R.attr.colorOutlineVariant
+                )
+            )
+        }
+    }
+
+    private fun renderPace(paceSteps: Long) {
+        binding.paceNumber.text = "%,d".format(abs(paceSteps))
+        binding.paceSubtitle.text = getString(
+            when {
+                paceSteps > 0 -> R.string.pace_steps_ahead
+                paceSteps < 0 -> R.string.pace_steps_behind
+                else -> R.string.pace_on_pace
+            }
+        )
+
+        val fraction = (abs(paceSteps).toFloat() / PACE_MAX_MAGNITUDE).coerceAtMost(1f)
+        val targetColor = if (paceSteps >= 0) PACE_GREEN else PACE_RED
+
+        val surfaceColor = MaterialColors.getColor(
+            binding.paceCard,
+            com.google.android.material.R.attr.colorSurface
+        )
+        binding.paceCard.setCardBackgroundColor(
+            ColorUtils.blendARGB(surfaceColor, targetColor, fraction * 0.35f)
+        )
+
+        val onSurfaceColor = MaterialColors.getColor(
+            binding.paceCard,
+            com.google.android.material.R.attr.colorOnSurface
+        )
+        binding.paceNumber.setTextColor(
+            ColorUtils.blendARGB(onSurfaceColor, targetColor, fraction.coerceAtLeast(0.15f))
+        )
+
+        val dotPosition = ((paceSteps.toFloat() / PACE_MAX_MAGNITUDE).coerceIn(-1f, 1f) + 1f) / 2f
+        binding.paceTrack.post {
+            val trackWidth = binding.paceTrack.width
+            val dotWidth = binding.paceDot.width
+            if (trackWidth > 0) {
+                binding.paceDot.translationX = (trackWidth - dotWidth) * dotPosition
+            }
+        }
+
+        val dotColor = ColorUtils.blendARGB(
+            MaterialColors.getColor(
+                binding.paceCard,
+                com.google.android.material.R.attr.colorOutline
+            ),
+            targetColor,
+            fraction.coerceAtLeast(0.3f)
+        )
+        binding.paceDot.background = GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(dotColor)
         }
     }
 
@@ -200,5 +274,11 @@ class DashboardFragment : Fragment(), MenuProvider {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private companion object {
+        val PACE_GREEN = 0xFF4CAF50.toInt()
+        val PACE_RED = 0xFFF44336.toInt()
+        const val PACE_MAX_MAGNITUDE = 100_000f
     }
 }

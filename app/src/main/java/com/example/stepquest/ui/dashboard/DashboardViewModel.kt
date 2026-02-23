@@ -137,13 +137,17 @@ class DashboardViewModel(
 
         val goals = GoalCalculator.deriveGoals(goalPreferences.getYearlyGoal(), today)
 
+        val expectedSteps = goals.daily * today.dayOfYear
+        val paceSteps = yearSteps - expectedSteps
+
         _state.update {
             it.copy(
                 today = DashboardRow(todaySteps, goals.daily, GoalCalculator.calculatePercent(todaySteps, goals.daily)),
                 last7 = DashboardRow(last7Steps, goals.last7, GoalCalculator.calculatePercent(last7Steps, goals.last7)),
                 month = DashboardRow(monthSteps, goals.monthly, GoalCalculator.calculatePercent(monthSteps, goals.monthly)),
                 last30 = DashboardRow(last30Steps, goals.last30, GoalCalculator.calculatePercent(last30Steps, goals.last30)),
-                year = DashboardRow(yearSteps, goals.yearly, GoalCalculator.calculatePercent(yearSteps, goals.yearly))
+                year = DashboardRow(yearSteps, goals.yearly, GoalCalculator.calculatePercent(yearSteps, goals.yearly)),
+                paceSteps = paceSteps
             )
         }
     }
