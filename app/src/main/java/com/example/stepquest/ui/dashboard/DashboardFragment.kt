@@ -110,7 +110,7 @@ class DashboardFragment : Fragment(), MenuProvider {
                 }
                 launch {
                     while (true) {
-                        delay(30_000)
+                        delay(1_000)
                         viewModel.autoRefreshToday()
                     }
                 }

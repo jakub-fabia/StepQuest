@@ -1,11 +1,13 @@
 package com.example.stepquest.widget
 
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.SystemClock
 import android.widget.RemoteViews
 import com.example.stepquest.StepQuestApplication
 import com.example.stepquest.MainActivity
@@ -18,11 +20,22 @@ import java.time.LocalDate
 
 class StepsWidgetProvider : AppWidgetProvider() {
 
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+        scheduleAlarm(context)
+    }
+
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+        cancelAlarm(context)
+    }
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
+        scheduleAlarm(context)
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -115,12 +128,39 @@ class StepsWidgetProvider : AppWidgetProvider() {
 
     companion object {
         private const val ACTION_WIDGET_UPDATE = "com.example.stepquest.ACTION_WIDGET_UPDATE"
+        private const val ALARM_INTERVAL_MS = 5 * 60 * 1000L // 5 minutes
 
         fun requestUpdate(context: Context) {
             val intent = Intent(ACTION_WIDGET_UPDATE).apply {
                 component = ComponentName(context, StepsWidgetProvider::class.java)
             }
             context.sendBroadcast(intent)
+        }
+
+        fun scheduleAlarm(context: Context) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val pi = getAlarmPendingIntent(context)
+            alarmManager.setRepeating(
+                AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + ALARM_INTERVAL_MS,
+                ALARM_INTERVAL_MS,
+                pi
+            )
+        }
+
+        fun cancelAlarm(context: Context) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.cancel(getAlarmPendingIntent(context))
+        }
+
+        private fun getAlarmPendingIntent(context: Context): PendingIntent {
+            val intent = Intent(ACTION_WIDGET_UPDATE).apply {
+                component = ComponentName(context, StepsWidgetProvider::class.java)
+            }
+            return PendingIntent.getBroadcast(
+                context, 0, intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
     }
 }
