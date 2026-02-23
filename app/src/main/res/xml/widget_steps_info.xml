@@ -5,7 +5,7 @@
     android:minWidth="110dp"
     android:minHeight="110dp"
     android:updatePeriodMillis="1800000"
-    android:resizeMode="none"
+    android:resizeMode="horizontal|vertical"
     android:previewLayout="@layout/widget_steps"
     android:description="@string/widget_description"
     android:initialLayout="@layout/widget_steps" />

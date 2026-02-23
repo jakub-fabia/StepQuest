@@ -2,7 +2,9 @@
 <resources>
     <color name="goal_met_green">#FF4CAF50</color>
 
-    <!-- Widget text colors (dark mode) -->
+    <!-- Widget colors (dark mode) -->
+    <color name="widget_bg">#FF1C1B1F</color>
+    <color name="widget_outline">#1FFFFFFF</color>
     <color name="widget_text_primary">#DEFFFFFF</color>
     <color name="widget_text_secondary">#99FFFFFF</color>
 </resources>
